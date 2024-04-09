@@ -10,7 +10,7 @@ import joblib
 app = Flask(__name__)
 
 # Load the trained model
-model = joblib.load('svm_nidek.pkl')
+model = joblib.load('svm_model.pkl')
 
 Categories = ['cats', 'dogs']
 
