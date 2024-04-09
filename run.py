@@ -42,4 +42,4 @@ def classify_image():
     return jsonify({'predicted_class': predicted_class, 'confidence': confidence})
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    app.run(debug=True)
