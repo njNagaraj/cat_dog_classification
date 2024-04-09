@@ -28,3 +28,4 @@ threadpoolctl==3.4.0
 tifffile==2024.2.12
 tzdata==2024.1
 Werkzeug==3.0.2
+gunicorn
