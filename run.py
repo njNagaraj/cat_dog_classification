@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 import os
 from skimage.transform import resize
 from skimage.io import imread
@@ -22,7 +22,7 @@ def classify_image():
         image_file = request.files.get('image')
         if not image_file:
             return jsonify({'error': 'No image file provided'}), 400
-        
+
         # Save the image to a temporary location
         temp_path = 'temp.jpg'
         image_file.save(temp_path)
@@ -30,23 +30,26 @@ def classify_image():
         # Load and preprocess the image
         img_array = imread(temp_path)
         img_resized = resize(img_array, (50, 50, 3))
-        img_flattened = img_resized.flatten()
-        img_flattened = np.expand_dims(img_flattened, axis=0)
+        img_flattened = [img_resized.flatten()]
 
         # Predict the class probabilities
-        probabilities = model.predict_proba(img_flattened)[0]
-        # Get the predicted class
-        predicted_class = Categories[np.argmax(probabilities)]
-        # Get the probability of the predicted class
-        confidence = probabilities[np.argmax(probabilities)]
+        probabilities = model.predict_proba(img_flattened)
+
+        predicted_class = Categories[model.predict(img_flattened)[0]]
+
+        # Format the response
+        response_data = {
+            'predicted_class': predicted_class,
+        }
 
         # Delete the temporary image file
         os.remove(temp_path)
 
         # Return the result to the Flutter application
-        return jsonify({'predicted_class': predicted_class, 'confidence': confidence}), 200
+        return jsonify(response_data), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
 
 if __name__ == '__main__':
     app.run(debug=True)
