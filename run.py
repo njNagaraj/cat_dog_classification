@@ -11,10 +11,7 @@ app = Flask(__name__)
 
 # Load the trained model
 MODEL_FILE = 'svm_model.pkl'
-if os.path.exists(MODEL_FILE):
-    model = joblib.load(MODEL_FILE)
-else:
-    raise FileNotFoundError(f"Model file '{MODEL_FILE}' not found.")
+model = joblib.load(MODEL_FILE)
 
 Categories = ['cats', 'dogs']
 
